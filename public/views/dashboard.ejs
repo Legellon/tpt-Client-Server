@@ -8,7 +8,7 @@
     <title>dashboard</title>
 </head>
 <body>
-    <form action="">
+    <form action="/dashboard/submit" method="POST">
         <label for="email">Email Address:</label><br>
         <input type="text" name="email" placeholder="name@example.com" required><br>
 
@@ -18,7 +18,7 @@
         <label for="category">Category:</label><br>
         <input list="category" placeholder="Option 1" required>
         <datalist id="category" name="category">
-
+            <option value="1">Option 1</option>
         </datalist><br>
 
         <label for="note">Note:</label><br>

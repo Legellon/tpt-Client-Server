@@ -7,7 +7,7 @@ const secrect_token = process.env.TOKEN_KEY
 async function register(req, res) {
     const { password } = req.body
     const hashed_psw = await bcrypt.hash(password, 10)
-    db.query(`INSERT INTO users (id, role, password) VALUES (NULL, 'admin', '${hashed_psw}')`)
+    db.query(`INSERT INTO users (userID, role, password) VALUES (NULL, 'admin', '${hashed_psw}')`)
     res.status(200)
 }
 
@@ -23,9 +23,10 @@ function requireAuth(req, res, next) {
 
 function login(req, res) {
     const { password } = req.body
-    db.query(`SELECT password,id FROM users`, async (err, result) => {
-        if (await bcrypt.compare(password, result[0].password)) {
-            const user_id = result[0].id;
+    db.query(`SELECT password,userID FROM users`, async (err, result) => {
+        const record = result[0]
+        if (await bcrypt.compare(password, record.password)) {
+            const user_id = record.userID;
 
             const token = jwt.sign(user_id, secrect_token)
             res.cookie('jwt', token, {httpOnly: true, maxAge: 900000})
