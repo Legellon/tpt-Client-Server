@@ -1,0 +1,42 @@
+<%- include('../partials/header') %>
+
+<form action="/dashboard/submit" method="POST">
+    <label for="email">Email Address:</label><br>
+    <input type="text" name="email" placeholder="name@example.com" required><br>
+
+    <label for="fullname">Full name:</label><br>
+    <input type="text" name="fullname" placeholder="Nikita Rehemäe" required><br>
+
+    <label for="category">Category:</label><br>
+    <select id="category" name="category" required>
+        <% categories.forEach((category) => { %>
+            <option value="<%= category.categoryID %>"><%= category.category %></option>
+        <%})%> 
+    </select><br>
+
+    <label for="note">Note:</label><br>
+    <textarea name="note" cols="30" rows="10" placeholder="Text note" required></textarea><br>
+
+    <input type="submit" value="Submit">
+</form><br>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Category</th>
+        <th>Note</th>
+    </tr>
+    <% dashboards.forEach((dashboard) => { %>
+        <tr>
+            <td><%= dashboard.dashboardID %></td>
+            <td><%= dashboard.name %></td>
+            <td><%= dashboard.email %></td>
+            <td><%= dashboard.category %></td>
+            <td><%= dashboard.note %></td>
+        </tr>
+    <%})%>
+</table>
+
+<%- include('../partials/footer') %> 

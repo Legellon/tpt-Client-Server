@@ -1,10 +1,10 @@
 const express = require('express')
-const dashboardController = require('../controllers/dashboard.js')
-const { requireAuth } = require('./../controllers/auth.js')
+const Dashboard = require('../controllers/dashboard.js')
+const { RequireAuth } = require('./../controllers/auth.js')
 
 const router = express.Router()
 
-router.get('/', requireAuth, dashboardController.render)
-router.post('/submit', dashboardController.submit)
+router.get('/', RequireAuth, Dashboard.Render)
+router.post('/submit', Dashboard.Submit)
 
-module.exports = router
+module.exports = router 
