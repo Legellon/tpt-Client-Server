@@ -32,7 +32,7 @@ module.exports = {
     },
 
     async Render(req, res) {
-        const categories = await new Promise((resolve) => {
+        const categories = await new Promise(resolve => {
             http.get("http://localhost:3000/api/categories", (res) => {
                 res.on('data', (chunk) => {
                     return resolve(JSON.parse(chunk))
@@ -40,14 +40,14 @@ module.exports = {
             })
         })
     
-        const dashboards = await new Promise((resolve) => {
+        const dashboards = await new Promise(resolve => {
             http.get("http://localhost:3000/api/dashboards", (res) => {
                 res.on('data', (chunk) => {
                     return resolve(JSON.parse(chunk))
                 })
             })
         })
-    
+
         res.status(200).render('dashboard', {
             title: 'Dashboard',
             categories: categories,

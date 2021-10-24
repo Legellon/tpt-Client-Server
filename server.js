@@ -16,9 +16,9 @@ server.use(express.json())
 server.use(express.static(public))
 server.use(express.urlencoded({ extended: false }))
 
-server.use('/', require('./routes/pages.js'))
-server.use('/auth', require('./routes/auth.js'))
-server.use('/dashboard', require('./routes/dashboard.js'))
-server.use('/api', require('./routes/api'))
+server.use('/', require('./routes/pages'))
+server.use('/auth', require('./routes/auth'))
+server.use('/dashboard', require('./routes/dashboard'))
+server.use('/api', require('./api/router'))
 
 server.listen(process.env.PORT)

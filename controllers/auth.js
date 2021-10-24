@@ -1,6 +1,3 @@
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-const db = require('../models/db.js')
 const http = require('http')
 
 const secrect_token = process.env.TOKEN_KEY
@@ -17,7 +14,7 @@ module.exports = {
             protocol: 'http:',
             hostname: 'localhost',
             port: 3000,
-            path: '/api/registration',
+            path: '/api/register',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -25,34 +22,44 @@ module.exports = {
             }
         }
 
-        const request = http.request(options)
-        request.write(data)
-        request.end
+        const registerRequest = http.request(options)
+        registerRequest.write(data)
+        registerRequest.end
 
         res.status(200).redirect('/auth')
     },
 
-    Login(req, res) {
+    async Login(req, res) {
         const { password } = req.body
-        db.query(`SELECT password,userID FROM users`, async (err, result) => {
-            const record = result[0]
-            console.log(record)
-            if (await bcrypt.compare(password, record.password)) {
-                const user_id = record.userID
-    
-                const token = jwt.sign(user_id, secrect_token)
-                res.cookie('jwt', token, {httpOnly: true, maxAge: 900000})
-    
-                res.status(200).redirect('/dashboard')
-            }
+
+        const loginRequest = await new Promise(resolve => {
+            http.get(`http://localhost:3000/api/login?password=${password}`, (res) => {
+                res.on('data', chunk => {
+                    return resolve(JSON.parse(chunk))
+                })
+            })
         })
-        res.status(403)
+
+        if(loginRequest.loggedIn) {
+            res.cookie('jwt', loginRequest.token, {httpOnly: true, maxAge: 60})
+            res.status(200).redirect('/dashboard')
+        } else {
+            res.status(403)
+        }
     },
 
-    RequireAuth(req, res, next) {
-        const token = req.cookies.jwt;
-        if(token) {
-            jwt.verify(token, secrect_token)
+    async RequireAuth(req, res, next) {
+        const { jwt } = req.cookies;
+
+        const verifyRequest = await new Promise(resolve => {
+            http.get(`http://localhost:3000/api/verify?token=${jwt}`, res => {
+                res.on('data', chunk => {
+                    return resolve(JSON.parse(chunk))
+                })
+            })
+        })
+
+        if(verifyRequest.loggedIn) {
             next()
         } else {
             res.status(403).redirect('/auth');
