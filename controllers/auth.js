@@ -1,43 +1,78 @@
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-const db = require('../models/db.js')
-
-const secrect_token = process.env.TOKEN_KEY
-
-async function register(req, res) {
-    const { password } = req.body
-    const hashed_psw = await bcrypt.hash(password, 10)
-    db.query(`INSERT INTO users (userID, role, password) VALUES (NULL, 'admin', '${hashed_psw}')`)
-    res.status(200)
-}
-
-function requireAuth(req, res, next) {
-    const token = req.cookies.jwt;
-    if(token) {
-        jwt.verify(token, secrect_token)
-        next()
-    } else {
-        res.redirect('/login');
-    }
-}
-
-function login(req, res) {
-    const { password } = req.body
-    db.query(`SELECT password,userID FROM users`, async (err, result) => {
-        const record = result[0]
-        if (await bcrypt.compare(password, record.password)) {
-            const user_id = record.userID;
-
-            const token = jwt.sign(user_id, secrect_token)
-            res.cookie('jwt', token, {httpOnly: true, maxAge: 900000})
-
-            res.status(200).redirect('/dashboard')
-        }
-    })
-}
+const http = require('http')
 
 module.exports = {
-    register,
-    login,
-    requireAuth
+    async Register(req, res) {
+        const { password } = req.body
+
+        const data = JSON.stringify({
+            password: password
+        })
+
+        const options = {
+            protocol: 'http:',
+            hostname: 'localhost',
+            port: 3000,
+            path: '/api/register',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': data.length
+            }
+        }
+
+        const registerRequest = http.request(options)
+        registerRequest.write(data)
+        registerRequest.end
+
+        res.status(200).redirect('/auth')
+    },
+
+    async Login(req, res) {
+        const { password } = req.body
+
+        const loginRequest = await new Promise(resolve => {
+            http.get(`http://localhost:3000/api/login?password=${password}`, (res) => {
+                res.on('data', chunk => {
+                    return resolve(JSON.parse(chunk))
+                })
+            })
+        })
+
+        if(loginRequest.loggedIn) {
+            res.cookie('jwt', loginRequest.token, {httpOnly: true, maxAge: 6000})
+            res.status(200).redirect('/dashboard')
+        } else {
+            res.status(403)
+        }
+    },
+
+    async RequireAuth(req, res, next) {
+        const { jwt } = req.cookies;
+
+        const verifyRequest = await new Promise(resolve => {
+            http.get(`http://localhost:3000/api/verify?token=${jwt}`, res => {
+                res.on('data', chunk => {
+                    return resolve(JSON.parse(chunk))
+                })
+            })
+        })
+
+        if(verifyRequest.loggedIn) {
+            next()
+        } else {
+            res.status(403).redirect('/auth');
+        }
+    },
+
+    RenderLogin(req, res) {
+        res.status(200).render('auth/login', {
+            title: 'Login'
+        })
+    },
+
+    RenderRegister(req, res) {
+        res.status(200).render('auth/register', {
+            title: 'Register'
+        })
+    }
 }
