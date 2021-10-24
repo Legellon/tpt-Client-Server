@@ -1,7 +1,5 @@
 const http = require('http')
 
-const secrect_token = process.env.TOKEN_KEY
-
 module.exports = {
     async Register(req, res) {
         const { password } = req.body
