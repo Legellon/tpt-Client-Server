@@ -4,7 +4,9 @@ const { RequireAuth } = require('./../controllers/auth.js')
 
 const router = express.Router()
 
-router.get('/', RequireAuth, Dashboard.Render)
+router.use(RequireAuth)
+
+router.get('/', Dashboard.Render)
 router.post('/submit', Dashboard.Submit)
 
 module.exports = router 
