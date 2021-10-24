@@ -39,8 +39,7 @@ module.exports = {
             })
         })
 
-        for(let i = 0; i < passwords.length; i++) {
-            const item = passwords[i]
+        for (let item of passwords) {
             if (await bcrypt.compare(password, item.password)) {
                 res.status(200).json({
                     loggedIn: true,
