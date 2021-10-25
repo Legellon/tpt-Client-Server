@@ -39,7 +39,7 @@ module.exports = {
         })
 
         if(loginRequest.loggedIn) {
-            res.cookie('jwt', loginRequest.token, {httpOnly: true, maxAge: 6000})
+            res.cookie('jwt', loginRequest.token, {httpOnly: true, maxAge: 1000 * 60})
             res.status(200).redirect('/dashboard')
         } else {
             res.status(403)

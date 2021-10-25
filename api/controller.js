@@ -60,11 +60,17 @@ module.exports = {
         const { token } = req.query
 
         if(token != 'undefined') {
-            res.status(200).json({
-                loggedIn: true,
-                value: jwt.verify(token, secrect_token)
+            jwt.verify(token, secrect_token, (err, value) => {
+                if(!err) {
+                    res.status(200).json({
+                        loggedIn: true,
+                        tokenValue: value
+                    })
+                }
             })
-        } else {
+        }
+
+        if(!res.finished) {
             res.status(403).json({
                 loggedIn: false
             })
