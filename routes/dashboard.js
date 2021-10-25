@@ -1,6 +1,6 @@
 const express = require('express')
-const Dashboard = require('../controllers/dashboard.js')
-const { RequireAuth } = require('./../controllers/auth.js')
+const Dashboard = require('../controllers/dashboard')
+const { RequireAuth } = require('./../middleware/auth')
 
 const router = express.Router()
 
