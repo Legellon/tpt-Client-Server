@@ -42,7 +42,7 @@ module.exports = {
             res.cookie('jwt', loginRequest.token, {httpOnly: true, maxAge: 1000 * 60})
             res.status(200).redirect('/dashboard')
         } else {
-            res.status(403)
+            res.status(403).redirect('back')
         }
     },
 
