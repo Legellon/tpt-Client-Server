@@ -3,6 +3,8 @@ const API = require('./controller')
 
 const router = express.Router()
 
+router.use(express.json())
+
 router.get('/categories', API.getCategories)
 router.get('/dashboards', API.getDashboards)
 router.post('/submit', API.postDashboard)

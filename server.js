@@ -8,13 +8,12 @@ const public = path.join(__dirname, './public')
 
 dotenv.config({path: './.env'})
 
+//client part
+server.use(express.urlencoded({ extended: false}))
+server.use(cookieParser())
+server.use(express.static(public))
 server.set('view engine', 'ejs')
 server.set('views', './public/views')
-
-server.use(cookieParser())
-server.use(express.json())
-server.use(express.static(public))
-server.use(express.urlencoded({ extended: false }))
 
 server.use('/', require('./routes/pages'))
 server.use('/auth', require('./routes/auth'))
