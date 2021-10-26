@@ -8,7 +8,7 @@ const public = path.join(__dirname, './public')
 
 dotenv.config({path: './.env'})
 
-//client part
+//client side
 server.use(express.urlencoded({ extended: false}))
 server.use(cookieParser())
 server.use(express.static(public))
