@@ -1,11 +1,11 @@
 const http = require('http')
-const config = require('../config')
+const config = require('../config/config')
 
-const { SERVER_PORT } = config
+const { SERVER_PORT } = config.defaults
 
 module.exports = {
     async Submit(req, res) {
-        const {fullname, email, category, note} = req.body
+        const { fullname, email, category, note } = req.body
     
         const data = JSON.stringify({
             fullname: fullname,
@@ -25,7 +25,7 @@ module.exports = {
                 'Content-Length': data.length
             }
         }
-        
+
         const request = http.request(options)
         request.write(data)
         request.end()

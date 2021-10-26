@@ -1,7 +1,7 @@
 const mysql = require('mysql2')
-const config = require('../config')
+const config = require('../config/config')
 
-const { DB_NAME, DB_HOST, DB_USER, DB_PASS } = config
+const { DB_NAME, DB_HOST, DB_USER, DB_PASS } = config.database
 
 const connection = mysql.createConnection({
     database : DB_NAME,

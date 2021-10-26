@@ -1,15 +1,12 @@
 const express = require('express')
 const path = require('path')
-const dotenv = require('dotenv')
 const cookieParser = require('cookie-parser')
-const config = require('./config')
+const config = require('./config/config')
 
 const server = express()
 const public = path.join(__dirname, './public')
 
-dotenv.config({path: './.env'})
-
-const { SERVER_PORT } = config
+const { SERVER_PORT } = config.defaults
 
 //client side
 server.use(express.urlencoded({ extended: false}))

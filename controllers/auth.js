@@ -1,7 +1,7 @@
 const http = require('http')
-const config = require('../config')
+const config = require('../config/config')
 
-const { SERVER_PORT } = config
+const { SERVER_PORT } = config.defaults
 
 module.exports = {
     async Register(req, res) {
