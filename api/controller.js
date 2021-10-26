@@ -1,8 +1,9 @@
 const connection = require('./db')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const config = require('../config')
 
-const secrect_token = process.env.TOKEN_KEY
+const { SECRET_TOKEN } = config
 
 module.exports = {
     async getCategories(req, res) {
@@ -43,7 +44,7 @@ module.exports = {
             if (await bcrypt.compare(password, item.password)) {
                 res.status(200).json({
                     loggedIn: true,
-                    token: jwt.sign(item.userID, secrect_token)
+                    token: jwt.sign(item.userID, SECRET_TOKEN)
                 })
                 break
             }
@@ -60,7 +61,7 @@ module.exports = {
         const { token } = req.query
 
         if(token != 'undefined') {
-            jwt.verify(token, secrect_token, (err, value) => {
+            jwt.verify(token, SECRET_TOKEN, (err, value) => {
                 if(!err) {
                     res.status(200).json({
                         loggedIn: true,

@@ -6,7 +6,7 @@ dotenv.config({
 
 module.exports = {
     SECRET_TOKEN: process.env.TOKEN_KEY,
-    PORT: process.env.PORT,
+    SERVER_PORT: process.env.PORT,
 
     DB_NAME: process.env.DB,
     DB_HOST: process.env.DB_HOST,

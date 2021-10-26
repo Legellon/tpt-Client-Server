@@ -1,4 +1,7 @@
 const http = require('http')
+const config = require('../config')
+
+const { SERVER_PORT } = config
 
 module.exports = {
     async Submit(req, res) {
@@ -14,7 +17,7 @@ module.exports = {
         const options = {
             protocol: 'http:',
             hostname: 'localhost',
-            port: 3000,
+            port: SERVER_PORT,
             path: '/api/submit',
             method: 'POST',
             headers: {
@@ -22,8 +25,7 @@ module.exports = {
                 'Content-Length': data.length
             }
         }
-
-        //.post("http://localhost:3000/api/submit")
+        
         const request = http.request(options)
         request.write(data)
         request.end()
@@ -33,7 +35,7 @@ module.exports = {
 
     async Render(req, res) {
         const categories = await new Promise(resolve => {
-            http.get("http://localhost:3000/api/categories", (res) => {
+            http.get(`http://localhost:${SERVER_PORT}/api/categories`, (res) => {
                 res.on('data', (chunk) => {
                     return resolve(JSON.parse(chunk))
                 })
@@ -41,7 +43,7 @@ module.exports = {
         })
     
         const dashboards = await new Promise(resolve => {
-            http.get("http://localhost:3000/api/dashboards", (res) => {
+            http.get(`http://localhost:${SERVER_PORT}/api/dashboards`, (res) => {
                 res.on('data', (chunk) => {
                     return resolve(JSON.parse(chunk))
                 })

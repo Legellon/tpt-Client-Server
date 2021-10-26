@@ -2,11 +2,14 @@ const express = require('express')
 const path = require('path')
 const dotenv = require('dotenv')
 const cookieParser = require('cookie-parser')
+const config = require('./config')
 
 const server = express()
 const public = path.join(__dirname, './public')
 
 dotenv.config({path: './.env'})
+
+const { SERVER_PORT } = config
 
 //client side
 server.use(express.urlencoded({ extended: false}))
@@ -22,4 +25,4 @@ server.use('/auth', require('./routes/auth'))
 server.use('/dashboard', require('./routes/dashboard'))
 server.use('/api', require('./api/router'))
 
-server.listen(process.env.PORT)
+server.listen(SERVER_PORT)

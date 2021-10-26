@@ -1,4 +1,7 @@
 const http = require('http')
+const config = require('../config')
+
+const { SERVER_PORT } = config
 
 module.exports = {
     async Register(req, res) {
@@ -11,7 +14,7 @@ module.exports = {
         const options = {
             protocol: 'http:',
             hostname: 'localhost',
-            port: 3000,
+            port: SERVER_PORT,
             path: '/api/register',
             method: 'POST',
             headers: {
@@ -31,7 +34,7 @@ module.exports = {
         const { password } = req.body
 
         const loginRequest = await new Promise(resolve => {
-            http.get(`http://localhost:3000/api/login?password=${password}`, (res) => {
+            http.get(`http://localhost:${SERVER_PORT}/api/login?password=${password}`, (res) => {
                 res.on('data', chunk => {
                     return resolve(JSON.parse(chunk))
                 })
