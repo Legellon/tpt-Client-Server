@@ -60,7 +60,7 @@ module.exports = {
     VerifyToken(req, res) {
         const { token } = req.query
 
-        if(token != 'undefined') {
+        if(token) {
             jwt.verify(token, SECRET_TOKEN, (err, value) => {
                 if(!err) {
                     res.status(200).json({
