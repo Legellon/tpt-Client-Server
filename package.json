@@ -4,7 +4,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "prod": "node ./app/server.js & node ./api/server.js",
+    "dev": "nodemon ./app/server.js & nodemon ./api/server.js",
+    "app": "node ./app/server.js",
+    "api": "node ./api/server.js"
   },
   "repository": {
     "type": "git",

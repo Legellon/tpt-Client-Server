@@ -1,7 +1,7 @@
 const http = require('http')
-const config = require('../config/config')
+const config = require('../../settings/config')
 
-const { SERVER_PORT } = config.defaults
+const { SERVER_PORT } = config.api
 
 module.exports = {
     async Submit(req, res) {
@@ -26,15 +26,15 @@ module.exports = {
             }
         }
 
-        const request = http.request(options)
-        request.write(data)
-        request.end()
+        const submitRequest = http.request(options)
+        submitRequest.write(data)
+        submitRequest.end()
     
         res.status(200).redirect('back')
     },
 
     async Render(req, res) {
-        const categories = await new Promise(resolve => {
+        const getCategoriesResponse = await new Promise(resolve => {
             http.get(`http://localhost:${SERVER_PORT}/api/categories`, (res) => {
                 res.on('data', (chunk) => {
                     return resolve(JSON.parse(chunk))
@@ -42,7 +42,7 @@ module.exports = {
             })
         })
     
-        const dashboards = await new Promise(resolve => {
+        const getDashboardsResponse = await new Promise(resolve => {
             http.get(`http://localhost:${SERVER_PORT}/api/dashboards`, (res) => {
                 res.on('data', (chunk) => {
                     return resolve(JSON.parse(chunk))
@@ -52,8 +52,8 @@ module.exports = {
 
         res.status(200).render('dashboard', {
             title: 'Dashboard',
-            categories: categories,
-            dashboards: dashboards
+            categories: getCategoriesResponse,
+            dashboards: getDashboardsResponse
         })
     }
 }

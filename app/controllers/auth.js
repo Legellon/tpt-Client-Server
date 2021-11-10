@@ -1,7 +1,7 @@
 const http = require('http')
-const config = require('../config/config')
+const config = require('../../settings/config')
 
-const { SERVER_PORT } = config.defaults
+const { SERVER_PORT } = config.api
 
 module.exports = {
     async Register(req, res) {
@@ -33,7 +33,7 @@ module.exports = {
     async Login(req, res) {
         const { password } = req.body
 
-        const loginRequest = await new Promise(resolve => {
+        const loginResponse = await new Promise(resolve => {
             http.get(`http://localhost:${SERVER_PORT}/api/login?password=${password}`, (res) => {
                 res.on('data', chunk => {
                     return resolve(JSON.parse(chunk))
@@ -41,8 +41,8 @@ module.exports = {
             })
         })
 
-        if(loginRequest.loggedIn) {
-            res.cookie('jwt', loginRequest.token, {httpOnly: true, maxAge: 1000 * 60})
+        if(loginResponse.loggedIn) {
+            res.cookie('jwt', loginResponse.token, {httpOnly: true, maxAge: 1000 * 60})
             res.status(200).redirect('/dashboard')
         } else {
             res.status(403).redirect('back')

@@ -1,5 +1,5 @@
 const mysql = require('mysql2')
-const config = require('../config/config')
+const config = require('../settings/config')
 
 const { DB_NAME, DB_HOST, DB_USER, DB_PASS } = config.database
 
@@ -11,9 +11,7 @@ const connection = mysql.createConnection({
 })
 
 connection.connect((err) => {
-    if (!err) {
-        console.log("DB connection succeded...")
-    } 
+    err ? console.log(err) : console.log("DB connection succeded...")
 })
 
 module.exports = connection

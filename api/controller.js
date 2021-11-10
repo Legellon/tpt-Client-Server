@@ -1,9 +1,9 @@
-const connection = require('./db')
+const connection = require('./db_connection')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const config = require('../config/config')
+const config = require('../settings/config')
 
-const { SECRET_TOKEN } = config.defaults
+const { SECRET_TOKEN } = config.api
 
 module.exports = {
     async getCategories(req, res) {
